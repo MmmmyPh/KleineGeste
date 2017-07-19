@@ -16,7 +16,7 @@ module.exports = {
 	context: path.resolve(process.cwd(), 'src'),
 
 	entry: {
-		kleinegeste: './index.js'
+		KleineGeste: './index.js'
 	},
 
 	output: {
