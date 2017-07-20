@@ -52,6 +52,8 @@ module.exports = {
 	devServer: {
 		hot: true,
 		contentBase: path.resolve(process.cwd(), 'dist'),
+		inline: true,
+		progress: true,
 		publicPath: '/'
 	}
 };

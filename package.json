@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "process-env NODE_ENV=dev webpack-dev-server",
-    "prod": "process-env NODE_ENV=prod webpack"
+    "dev": "cross-env NODE_ENV=dev webpack-dev-server --hot --inline",
+    "prod": "cross-env NODE_ENV=prod webpack"
   },
   "author": "MmmmyPh",
   "license": "ISC",
