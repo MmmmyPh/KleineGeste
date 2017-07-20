@@ -14,6 +14,9 @@ export default class KleineGeste{
 		this.ele = typeof el === 'string' ? document.querySelector(el) : el;
 		this.option = option;
 
+		// 工具对象
+		this.tools = new Tools();
+
 		this.t = {
 			x: null,
 			y: null
@@ -57,6 +60,7 @@ export default class KleineGeste{
 	start(e) {
 		this.startTime = Date.now();
 		this.touchStart.dispatch();
+		console.log(this.tools.getDist({x:1,y:2}, {x:4,y:6}));
 	}
 
 	move(e) {
@@ -64,6 +68,6 @@ export default class KleineGeste{
 	}
 
 	end(e) {
-        
+		this.endTime = Date.now();
 	}
 }
