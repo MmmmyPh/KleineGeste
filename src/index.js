@@ -4,6 +4,6 @@ let demoPanel = document.querySelector('.panel');
 
 new KleineGeste(demoPanel, {
 	touchStart() {
-		console.log(1);
+		console.log('touchstart');
 	}
 });

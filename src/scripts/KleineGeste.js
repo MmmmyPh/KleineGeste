@@ -1,5 +1,5 @@
 import Tools from './Tools';
-import GestureAdmin from './gestureMgmt';
+import GestureAdmin from './GestureAdmin';
 
 let handleWrap = (el, handler) => {
 	let gestureAdmin = new GestureAdmin(el);
@@ -42,9 +42,9 @@ export default class KleineGeste{
 	bindEvents() {
 		let nullFunc = () => {};
 
-		this.ele.addEventListener('touchstart', this.start, false);
-		this.ele.addEventListener('touchmove', this.move, false);
-		this.ele.addEventListener('touchend', this.end, false);
+		this.ele.addEventListener('touchstart', (e) => { this.start(e); }, false);
+		this.ele.addEventListener('touchmove', (e) => { this.move(e); }, false);
+		this.ele.addEventListener('touchend',(e) => { this.end(e); }, false);
 
 		this.touchStart = handleWrap(this.ele, this.option.touchStart || nullFunc);
 		this.tap = handleWrap(this.ele, this.option.tap || nullFunc);
@@ -56,6 +56,7 @@ export default class KleineGeste{
     
 	start(e) {
 		this.startTime = Date.now();
+		this.touchStart.dispatch();
 	}
 
 	move(e) {

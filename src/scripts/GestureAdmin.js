@@ -2,9 +2,9 @@
  * 手势动作函数的添加，删除，触发
  * 
  * @export
- * @class GestureMgmt
+ * @class GestureAdmin
  */
-export default class GestureMgmt {
+export default class GestureAdmin {
 	constructor(el) {
 		this.el = el;
 		this.gHandlers = [];

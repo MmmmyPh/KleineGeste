@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "cross-env NODE_ENV=dev webpack-dev-server --hot --inline",
+    "dev": "cross-env NODE_ENV=dev webpack-dev-server",
     "prod": "cross-env NODE_ENV=prod webpack"
   },
   "author": "MmmmyPh",
@@ -17,6 +17,7 @@
     "clean-webpack-plugin": "^0.1.16",
     "copy-webpack-plugin": "^4.0.1",
     "cross-env": "^5.0.1",
+    "html-webpack-harddisk-plugin": "^0.1.0",
     "html-webpack-plugin": "^2.29.0",
     "webpack": "^3.3.0",
     "webpack-dev-server": "^2.5.1"
