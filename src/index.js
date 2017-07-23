@@ -3,22 +3,23 @@ import KleineGeste from './scripts/KleineGeste';
 let demoPanel = document.querySelector('.inner');
 
 new KleineGeste(demoPanel, {
-	// touchStart() {
-	// 	console.log('touchstart');
-	// },
-	tap() {
-		console.log('tap ' + Date.now());
+	touchStart() {
+		this.innerHTML = '';
+		this.innerHTML += 'touchstart</br>';
 	},
-	doubleTap() {
-		console.log('doubleTap ' + Date.now());
+	tap(e) {
+		this.innerHTML += 'tap</br>';
 	},
-	longTap() {
-		console.log('longTap');
+	doubleTap(e) {
+		this.innerHTML += 'doubleTap</br>';
+	},
+	longTap(e) {
+		this.innerHTML += 'longTap</br>';
 	},
 	moving(e){
-		console.log('moving ' + e.direction);
+		this.style.transform = 'translate3d(' +e.distance.x+ 'px, ' +e.distance.y+ 'px, 0)';
 	},
-	// swipe(e){
-	// 	console.log('swipe ' + e.direction);
-	// }
+	swipe(e){
+		console.log('swipe ' + e.direction);
+	}
 });

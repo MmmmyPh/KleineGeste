@@ -48,4 +48,18 @@ export default class Tools{
 				(deltaX > 0 ? 'right' : 'left' ) :
 				(deltaY > 0 ? 'down' : 'up');
 	}
+
+	/**
+	 * 获取旋转的角度，带方向
+	 * 
+	 * 传入V1，V2为向量
+	 * 
+	 * @param {Object} v1 
+	 * @param {Object} v2 
+	 * @memberof Tools
+	 */
+	getRotate(v1, v2){
+		let v1Len = v2Len = 0;
+		let square = 0;
+	}
 }

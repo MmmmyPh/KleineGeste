@@ -1,3 +1,8 @@
+/**
+ * 
+ * 
+ * @class KleineGeste
+ */
 import Tools from './Tools';
 import GestureAdmin from './GestureAdmin';
 
@@ -125,11 +130,9 @@ export default class KleineGeste{
 			this.secFingerT.y = e.touches[1].pageY;
 
 			this.moveLen = tools.getDist(this.moveT, this.secFingerT);
-			// 双指缩?放?
-			this.deltaLen = this.moveLen - this.startLen;
 
 			// scale 
-			e.scaleBase = this.deltaLen / this.startLen;
+			e.scaleBase = this.moveLen / this.startLen;
 			this.scale.dispatch(e);
 		}
 
@@ -138,7 +141,12 @@ export default class KleineGeste{
 			clearTimeout(this.longTapTimeout);
 		}
 		// moving事件,swipe仅作为松手瞬间触发
+		// 传出参数，事件e，e.direction方向，e.distance距离
 		e.direction = tools.getDir(this.t, this.moveT);
+		e.distance = {
+			x: this.moveT.x - this.t.x,
+			y: this.moveT.y - this.t.y
+		};
 		this.moving.dispatch(e);
 	}
 
@@ -151,9 +159,17 @@ export default class KleineGeste{
 			this.moveT.y !== null && tools.getMinusAbs( this.moveT.y, this.t.y ) > 10 ){
 			// 触碰产生位移大于10px，非tap事件
 			e.direction = tools.getDir(this.t, this.moveT);
-			// this.swipe.dispatch(e);
+			e.distance = {
+				x: this.moveT.x - this.t.x,
+				y: this.moveT.y - this.t.y
+			};
+			this.swipe.dispatch(e);
 		}else{
 			if( tools.getMinusAbs(this.endTime, this.startTime ) < 300 ){
+				e.tapCenter = {
+					x: this.t.x,
+					y: this.t.y
+				};
 				this.doubleTapTimeout = setTimeout( () => {
 					// 立即触发doubletap,并阻止tap
 					if (this.isDoubleTap) {
