@@ -50,6 +50,17 @@ export default class Tools{
 	}
 
 	/**
+	 * 取得两个手势方向向量的向量积
+	 * 
+	 * @param {Object} v1 
+	 * @param {Object} v2 
+	 * @memberof Tools
+	 */
+	getCross(v1, v2){
+		return v1.x * v2.y - v1.y * v2.x;
+	}
+
+	/**
 	 * 获取旋转的角度，带方向
 	 * 
 	 * 传入V1，V2为向量
@@ -59,7 +70,8 @@ export default class Tools{
 	 * @memberof Tools
 	 */
 	getRotate(v1, v2){
-		let v1Len = v2Len = 0;
-		let square = 0;
+		let v1Len, v2Len, vCross, vSquare;
+
+		vCross = this.getCross(v1, v2);
 	}
 }

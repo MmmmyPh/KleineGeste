@@ -91,10 +91,16 @@ export default class KleineGeste{
 			clearTimeout( this.longTapTimeout );
 			clearTimeout( this.tapTimeout );
 			// 第二根手指位置
-			this.prevT.x = e.touches[0].pageX;
-			this.prevT.y = e.touches[0].pageY;
+			this.prevT.x = e.touches[1].pageX;
+			this.prevT.y = e.touches[1].pageY;
 
 			this.startLen = tools.getDist(this.t, this.prevT);
+
+			// 获取旋转使用的初始向量v1
+			this.v1 = {
+				x: () => Math.abs(this.prevT.x - this.t.x),
+				y: () => Math.abs(this.prevT.y - this.t.y)
+			};
 
 		}else{
 			this.touchStart.dispatch(e);
@@ -134,6 +140,14 @@ export default class KleineGeste{
 			// scale 
 			e.scaleBase = this.moveLen / this.startLen;
 			this.scale.dispatch(e);
+
+			// rotate
+			// 总觉得还是需要把scale和rotate隔离开，但是一时半会儿没什么好的想法
+			this.v2 = {
+				x: () => Math.abs(this.secFingerT.x - this.moveT.x),
+				y: () => Math.abs(this.secFingerT.y - this.moveT.y)
+			};
+			e.rotate = tools.getRotate();
 		}
 
 		// 一旦产生移动,就阻止doubleTap
