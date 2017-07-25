@@ -98,8 +98,8 @@ export default class KleineGeste{
 
 			// 获取旋转使用的初始向量v1
 			this.v1 = {
-				x: () => Math.abs(this.prevT.x - this.t.x),
-				y: () => Math.abs(this.prevT.y - this.t.y)
+				x: Math.abs(this.prevT.x - this.t.x),
+				y: Math.abs(this.prevT.y - this.t.y)
 			};
 
 		}else{
@@ -144,10 +144,11 @@ export default class KleineGeste{
 			// rotate
 			// 总觉得还是需要把scale和rotate隔离开，但是一时半会儿没什么好的想法
 			this.v2 = {
-				x: () => Math.abs(this.secFingerT.x - this.moveT.x),
-				y: () => Math.abs(this.secFingerT.y - this.moveT.y)
+				x: Math.abs(this.secFingerT.x - this.moveT.x),
+				y: Math.abs(this.secFingerT.y - this.moveT.y)
 			};
-			e.rotate = tools.getRotate();
+			e.rotate = tools.getRotate(this.v1, this.v2);
+			// console.log(e.rotate);
 		}
 
 		// 一旦产生移动,就阻止doubleTap

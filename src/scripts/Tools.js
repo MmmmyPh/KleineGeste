@@ -50,13 +50,28 @@ export default class Tools{
 	}
 
 	/**
-	 * 取得两个手势方向向量的向量积
+	 * 取得两个手势方向向量的内积
+	 * 
+	 * 选定用内积的方式，是因为，利用内积计算cos(Theta)<0为大于90°，否则用外积无法得到是否大于90°，或方法也许过于复杂
 	 * 
 	 * @param {Object} v1 
 	 * @param {Object} v2 
 	 * @memberof Tools
 	 */
-	getCross(v1, v2){
+	getDotProduct(v1, v2){
+		return v1.x * v2.x + v1.y * v2.y;
+	}
+
+	/**
+	 * 取得两个手势方向向量的外
+	 * 
+	 * 外积可以用来判断旋转方向
+	 * 
+	 * @param {Object} v1 
+	 * @param {Object} v2 
+	 * @memberof Tools
+	 */
+	getCrossProduct(v1, v2){
 		return v1.x * v2.y - v1.y * v2.x;
 	}
 
@@ -70,8 +85,17 @@ export default class Tools{
 	 * @memberof Tools
 	 */
 	getRotate(v1, v2){
-		let v1Len, v2Len, vCross, vSquare;
+		let vLenMultiply, vInnerProd, vTheta;
 
-		vCross = this.getCross(v1, v2);
+		vLenMultiply = Math.hypot(v1.x, v1.y) * Math.hypot(v2.x, v2.y);
+		vInnerProd = this.getDotProduct(v1, v2);
+
+		if( vLenMultiply === 0 ){
+			return 0;
+		}
+
+		vTheta = Math.acos( vInnerProd / vLenMultiply ) *180 / Math.PI;
+
+		return vTheta;
 	}
 }
