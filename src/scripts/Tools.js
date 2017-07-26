@@ -85,16 +85,28 @@ export default class Tools{
 	 * @memberof Tools
 	 */
 	getRotate(v1, v2){
-		let vLenMultiply, vInnerProd, vTheta;
+		let vLenMultiply, vInnerProd, vCrossProd, vDir, vCos, vTheta;
 
 		vLenMultiply = Math.hypot(v1.x, v1.y) * Math.hypot(v2.x, v2.y);
 		vInnerProd = this.getDotProduct(v1, v2);
+		vCrossProd = this.getCrossProduct(v1, v2);
+		vCos = vInnerProd / vLenMultiply;
 
 		if( vLenMultiply === 0 ){
 			return 0;
 		}
 
-		vTheta = Math.acos( vInnerProd / vLenMultiply ) *180 / Math.PI;
+		// 在做缩放时，不进行旋转。将rotate和scale隔离
+		if( vCos > 1 ) {
+			vCos = 1;
+		}
+
+		if( vCos < -1 ) {
+			vCos = -1;
+		}
+
+		vDir = vCrossProd < 0 ? -1 : 1;
+		vTheta =  vDir * Math.acos( vCos ) *180 / Math.PI;
 
 		return vTheta;
 	}

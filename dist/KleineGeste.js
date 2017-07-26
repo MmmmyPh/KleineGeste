@@ -79,28 +79,28 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var demoPanel = document.querySelector('.inner');
 
 new _KleineGeste2.default(demoPanel, {
-	// touchStart() {
-	// 	this.innerHTML = '';
-	// 	this.innerHTML += 'touchstart</br>';
-	// },
-	// tap(e) {
-	// 	this.innerHTML += 'tap</br>';
-	// },
-	// doubleTap(e) {
-	// 	this.innerHTML += 'doubleTap</br>';
-	// },
-	// longTap(e) {
-	// 	this.innerHTML += 'longTap</br>';
-	// },
-	// moving(e) {
-	// 	this.style.transform = 'translate3d(' +e.distance.x+ 'px, ' +e.distance.y+ 'px, 0)';
-	// },
-	// swipe(e) {
-	// 	console.log('swipe ' + e.direction);
-	// },
+	touchStart: function touchStart() {
+		this.innerHTML = '';
+		this.innerHTML += 'touchstart</br>';
+	},
+	tap: function tap(e) {
+		this.innerHTML += 'tap</br>';
+	},
+	doubleTap: function doubleTap(e) {
+		this.innerHTML += 'doubleTap</br>';
+	},
+	longTap: function longTap(e) {
+		this.innerHTML += 'longTap</br>';
+	},
+	moving: function moving(e) {
+		this.style.transform = 'translate3d(' + e.distance.x + 'px, ' + e.distance.y + 'px, 0)';
+	},
+	swipe: function swipe(e) {},
 	scale: function scale(e) {
-		// this.innerHTML += e.scaleBase + '</br>';
-		this.style.transform = 'scale(' + e.scaleBase + ')';
+		this.style.transform = 'scale(' + e.scales + ')';
+	},
+	rotate: function rotate(e) {
+		this.style.transform = 'rotate(' + e.rotates + 'deg)';
 	}
 });
 
@@ -240,8 +240,8 @@ var KleineGeste = function () {
 
 				// 获取旋转使用的初始向量v1
 				this.v1 = {
-					x: Math.abs(this.prevT.x - this.t.x),
-					y: Math.abs(this.prevT.y - this.t.y)
+					x: this.prevT.x - this.t.x,
+					y: this.prevT.y - this.t.y
 				};
 			} else {
 				this.touchStart.dispatch(e);
@@ -278,17 +278,16 @@ var KleineGeste = function () {
 				this.moveLen = tools.getDist(this.moveT, this.secFingerT);
 
 				// scale 
-				e.scaleBase = this.moveLen / this.startLen;
+				e.scales = this.moveLen / this.startLen;
 				this.scale.dispatch(e);
 
 				// rotate
-				// 总觉得还是需要把scale和rotate隔离开，但是一时半会儿没什么好的想法
 				this.v2 = {
-					x: Math.abs(this.secFingerT.x - this.moveT.x),
-					y: Math.abs(this.secFingerT.y - this.moveT.y)
+					x: this.secFingerT.x - this.moveT.x,
+					y: this.secFingerT.y - this.moveT.y
 				};
-				e.rotate = tools.getRotate(this.v1, this.v2);
-				// console.log(e.rotate);
+				e.rotates = tools.getRotate(this.v1, this.v2);
+				this.rotate.dispatch(e);
 			}
 
 			// 一旦产生移动,就阻止doubleTap
@@ -435,7 +434,9 @@ var Tools = function () {
 		}
 
 		/**
-   * 取得两个手势方向向量的向量积
+   * 取得两个手势方向向量的内积
+   * 
+   * 选定用内积的方式，是因为，利用内积计算cos(Theta)<0为大于90°，否则用外积无法得到是否大于90°，或方法也许过于复杂
    * 
    * @param {Object} v1 
    * @param {Object} v2 
@@ -443,12 +444,25 @@ var Tools = function () {
    */
 
 	}, {
-		key: 'getCross',
-		value: function getCross(v1, v2) {
-			// 这是外积计算方式
-			// return v1.x * v2.y - v1.y * v2.x;
-			// 这是内积计算方式
+		key: 'getDotProduct',
+		value: function getDotProduct(v1, v2) {
 			return v1.x * v2.x + v1.y * v2.y;
+		}
+
+		/**
+   * 取得两个手势方向向量的外
+   * 
+   * 外积可以用来判断旋转方向
+   * 
+   * @param {Object} v1 
+   * @param {Object} v2 
+   * @memberof Tools
+   */
+
+	}, {
+		key: 'getCrossProduct',
+		value: function getCrossProduct(v1, v2) {
+			return v1.x * v2.y - v1.y * v2.x;
 		}
 
 		/**
@@ -466,16 +480,31 @@ var Tools = function () {
 		value: function getRotate(v1, v2) {
 			var vLenMultiply = void 0,
 			    vInnerProd = void 0,
+			    vCrossProd = void 0,
+			    vDir = void 0,
+			    vCos = void 0,
 			    vTheta = void 0;
 
 			vLenMultiply = Math.hypot(v1.x, v1.y) * Math.hypot(v2.x, v2.y);
-			vInnerProd = this.getCross(v1, v2);
+			vInnerProd = this.getDotProduct(v1, v2);
+			vCrossProd = this.getCrossProduct(v1, v2);
+			vCos = vInnerProd / vLenMultiply;
 
 			if (vLenMultiply === 0) {
 				return 0;
 			}
 
-			vTheta = Math.asin(vInnerProd / vLenMultiply) * 180 / Math.PI;
+			// 在做缩放时，不进行旋转。将rotate和scale隔离
+			if (vCos > 1) {
+				vCos = 1;
+			}
+
+			if (vCos < -1) {
+				vCos = -1;
+			}
+
+			vDir = vCrossProd < 0 ? -1 : 1;
+			vTheta = vDir * Math.acos(vCos) * 180 / Math.PI;
 
 			return vTheta;
 		}
