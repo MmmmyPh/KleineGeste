@@ -1,4 +1,4 @@
-import KleineGeste from './scripts/KleineGeste';
+import KleineGeste from '../main';
 
 let demoPanel = document.querySelector('.inner');
 

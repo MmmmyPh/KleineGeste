@@ -1,49 +1,23 @@
 const webpack = require('webpack');
-const path = require('path');
+const base = require('./base');
+const webpackMerge = require('webpack-merge');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 let pathToClean = [
-	'dist'
+	'dist/*.*'
 ];
 
 let cleanOption = {
+	root: process.cwd(),
 	verbose: false
 };
 
-module.exports = {
-	context: path.resolve(process.cwd(), 'src'),
-
+module.exports = webpackMerge(base, {
 	entry: {
-		KleineGeste: './index.js'
-	},
-
-	output: {
-		filename: '[name].js',
-		path: path.resolve(process.cwd(), 'dist')
-	},
-
-	module: {
-		rules: [
-			{
-				test: /\.js$/,
-				exclude: /node_modules/,
-				use: {
-					loader: 'babel-loader',
-					options: {
-						presets: ['env']
-					}
-				}
-			}
-		]
+		KleineGeste: './main.js'
 	},
 
 	plugins: [
-		new CleanWebpackPlugin(pathToClean, cleanOption),
-		new HtmlWebpackPlugin({
-			filename: 'demo.html',
-			title: 'KleineGeste Demo',
-			template: path.resolve(process.cwd(), 'src/template.html')
-		})
+		new CleanWebpackPlugin(pathToClean, cleanOption)
 	]
-};
+});

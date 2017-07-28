@@ -70,47 +70,6 @@
 "use strict";
 
 
-var _KleineGeste = __webpack_require__(1);
-
-var _KleineGeste2 = _interopRequireDefault(_KleineGeste);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var demoPanel = document.querySelector('.inner');
-
-new _KleineGeste2.default(demoPanel, {
-	touchStart: function touchStart() {
-		this.innerHTML = '';
-		this.innerHTML += 'touchstart</br>';
-	},
-	tap: function tap(e) {
-		this.innerHTML += 'tap</br>';
-	},
-	doubleTap: function doubleTap(e) {
-		this.innerHTML += 'doubleTap</br>';
-	},
-	longTap: function longTap(e) {
-		this.innerHTML += 'longTap</br>';
-	},
-	moving: function moving(e) {
-		this.style.transform = 'translate3d(' + e.distance.x + 'px, ' + e.distance.y + 'px, 0)';
-	},
-	swipe: function swipe(e) {},
-	scale: function scale(e) {
-		this.style.transform = 'scale(' + e.scales + ')';
-	},
-	rotate: function rotate(e) {
-		this.style.transform = 'rotate(' + e.rotates + 'deg)';
-	}
-});
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
@@ -122,11 +81,11 @@ var _createClass = function () { function defineProperties(target, props) { for 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       */
 
 
-var _Tools = __webpack_require__(2);
+var _Tools = __webpack_require__(1);
 
 var _Tools2 = _interopRequireDefault(_Tools);
 
-var _GestureAdmin = __webpack_require__(3);
+var _GestureAdmin = __webpack_require__(2);
 
 var _GestureAdmin2 = _interopRequireDefault(_GestureAdmin);
 
@@ -224,6 +183,8 @@ var KleineGeste = function () {
 		value: function start(e) {
 			var _this2 = this;
 
+			e.preventDefault();
+
 			this.t.x = e.touches[0].pageX;
 			this.t.y = e.touches[0].pageY;
 
@@ -267,6 +228,8 @@ var KleineGeste = function () {
 	}, {
 		key: 'move',
 		value: function move(e) {
+			e.preventDefault();
+
 			this.moveT.x = e.touches[0].pageX;
 			this.moveT.y = e.touches[0].pageY;
 
@@ -357,7 +320,7 @@ var KleineGeste = function () {
 exports.default = KleineGeste;
 
 /***/ }),
-/* 2 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -516,7 +479,7 @@ var Tools = function () {
 exports.default = Tools;
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

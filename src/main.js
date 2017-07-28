@@ -3,8 +3,8 @@
  * 
  * @class KleineGeste
  */
-import Tools from './Tools';
-import GestureAdmin from './GestureAdmin';
+import Tools from './scripts/Tools';
+import GestureAdmin from './scripts/GestureAdmin';
 
 let handleWrap = (el, handler) => {
 	let gestureAdmin = new GestureAdmin(el);
