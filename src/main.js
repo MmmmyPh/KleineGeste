@@ -17,7 +17,7 @@ let handleWrap = (el, handler) => {
 // 工具对象
 const tools = new Tools();
 
-export default class KleineGeste{
+class KleineGeste{
 	constructor(el, option) {
 		this.ele = typeof el === 'string' ? document.querySelector(el) : el;
 		this.option = option;
@@ -212,3 +212,11 @@ export default class KleineGeste{
 		this.moveT.y = null;
 	}
 }
+
+if( typeof module !== 'undefined' && typeof exports === 'object' && define.cmd ){
+	module.export = KleineGeste;
+}else{
+	window.KleineGeste = KleineGeste;
+}
+
+export default KleineGeste;
