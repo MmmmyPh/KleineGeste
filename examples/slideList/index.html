@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <title>Document</title>
+    <style>
+        *{margin:0; padding:0;}
+        .c-list{position:absolute; top:0; right:0; bottom:0; left:0; overflow:hidden;}
+        .c-list__item{position:relative; min-height:50px; line-height:50px;}
+        .c-list__cover{position:absolute; top:0; right:0; bottom:0; left:0; padding:0 30px; background:linear-gradient(0deg, #666 0%, #666 50%, transparent 100%) #fff left bottom/100% 1px no-repeat; z-index:1;}
+        .c-list__behind{position:absolute; top:0; right:0; bottom:0; width:80px; background:#f66; color:#fff; text-align:center;}
+    </style>
+</head>
+<body>
+    <div class="c-list">
+        <div class="c-list__con">
+            <div class="c-list__item">
+                <div class="c-list__cover">1</div>
+                <div class="c-list__behind">删除</div>
+            </div>
+            <div class="c-list__item">
+                <div class="c-list__cover">2</div>
+                <div class="c-list__behind">删除</div>
+            </div>
+            <div class="c-list__item">
+                <div class="c-list__cover">3</div>
+                <div class="c-list__behind">删除</div>
+            </div>
+            <div class="c-list__item">
+                <div class="c-list__cover">4</div>
+                <div class="c-list__behind">删除</div>
+            </div>
+            <div class="c-list__item">
+                <div class="c-list__cover">5</div>
+                <div class="c-list__behind">删除</div>
+            </div>
+            <div class="c-list__item">
+                <div class="c-list__cover">6</div>
+                <div class="c-list__behind">删除</div>
+            </div>
+            <div class="c-list__item">
+                <div class="c-list__cover">7</div>
+                <div class="c-list__behind">删除</div>
+            </div>
+            <div class="c-list__item">
+                <div class="c-list__cover">8</div>
+                <div class="c-list__behind">删除</div>
+            </div>
+            <div class="c-list__item">
+                <div class="c-list__cover">9</div>
+                <div class="c-list__behind">删除</div>
+            </div>
+            <div class="c-list__item">
+                <div class="c-list__cover">11</div>
+                <div class="c-list__behind">删除</div>
+            </div>
+            <div class="c-list__item">
+                <div class="c-list__cover">12</div>
+                <div class="c-list__behind">删除</div>
+            </div>
+            <div class="c-list__item">
+                <div class="c-list__cover">13</div>
+                <div class="c-list__behind">删除</div>
+            </div>
+            <div class="c-list__item">
+                <div class="c-list__cover">14</div>
+                <div class="c-list__behind">删除</div>
+            </div>
+            <div class="c-list__item">
+                <div class="c-list__cover">15</div>
+                <div class="c-list__behind">删除</div>
+            </div>
+            <div class="c-list__item">
+                <div class="c-list__cover">16</div>
+                <div class="c-list__behind">删除</div>
+            </div>
+            <div class="c-list__item">
+                <div class="c-list__cover">17</div>
+                <div class="c-list__behind">删除</div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../../dist/KleineGeste.js"></script>
+    <script>
+        var list = document.querySelector('.c-list');
+        new KleineGeste(list, {
+            moving: function(e){
+                console.log(1)
+            }
+        })
+    </script>
+</body>
+</html>

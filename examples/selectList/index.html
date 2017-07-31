@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <title>Document</title>
+    <style>
+        *{margin:0; padding:0;}
+        .c-selects{position:absolute; top:0; right:0; bottom:0; left:0; background:rgba(0, 0, 0, 0.4); overflow:hidden;}
+        .c-selects__wrap{position:absolute; right:0; bottom:0; left:0; height:150px; background:#fff; overflow:hidden;}
+        .c-selects__wrap:before,
+        .c-selects__wrap:after{content:""; position:absolute; left:0; right:0; height:60px; z-index:2;}
+        .c-selects__wrap:before{top:0; background:linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, transparent 150%);}
+        .c-selects__wrap:after{bottom:0; background:linear-gradient(0deg, rgba(255, 255, 255, 1) 0%, transparent 150%);}
+        .c-selects__chosen{position:absolute; left:0; right:0; top:50%; transform:translateY(-50%); height:30px; background:linear-gradient(180deg, #dadada 0%, #dadada 50%, transparent 100%), linear-gradient(180deg, #dadada 0%, #dadada 50%, transparent 100%); background-size:100% 1px, 100% 1px; background-repeat:no-repeat; background-position:left bottom, left top;}
+        .c-selects__con{padding-top:60px;}
+        .c-selects__item{position:relative; height:30px; line-height:30px;}
+        .c-selects__cover{padding:0 30px; text-align:center;}
+    </style>
+</head>
+<body>
+    <div class="c-selects">
+        <div class="c-selects__wrap">
+            <div class="c-selects__chosen"></div>
+            <div class="c-selects__con">
+                <div class="c-selects__item">
+                    <div class="c-selects__cover">1</div>
+                </div>
+                <div class="c-selects__item">
+                    <div class="c-selects__cover">2</div>
+                </div>
+                <div class="c-selects__item">
+                    <div class="c-selects__cover">3</div>
+                </div>
+                <div class="c-selects__item">
+                    <div class="c-selects__cover">4</div>
+                </div>
+                <div class="c-selects__item">
+                    <div class="c-selects__cover">5</div>
+                </div>
+                <div class="c-selects__item">
+                    <div class="c-selects__cover">6</div>
+                </div>
+                <div class="c-selects__item">
+                    <div class="c-selects__cover">7</div>
+                </div>
+                <div class="c-selects__item">
+                    <div class="c-selects__cover">8</div>
+                </div>
+                <div class="c-selects__item">
+                    <div class="c-selects__cover">9</div>
+                </div>
+                <div class="c-selects__item">
+                    <div class="c-selects__cover">11</div>
+                </div>
+                <div class="c-selects__item">
+                    <div class="c-selects__cover">12</div>
+                </div>
+                <div class="c-selects__item">
+                    <div class="c-selects__cover">13</div>
+                </div>
+                <div class="c-selects__item">
+                    <div class="c-selects__cover">14</div>
+                </div>
+                <div class="c-selects__item">
+                    <div class="c-selects__cover">15</div>
+                </div>
+                <div class="c-selects__item">
+                    <div class="c-selects__cover">16</div>
+                </div>
+                <div class="c-selects__item">
+                    <div class="c-selects__cover">17</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../../dist/KleineGeste.js"></script>
+    <script>
+        ;(function(){
+
+            var selects = document.querySelector('.c-selects'),
+                selectWrap = selects.querySelector('.c-selects__wrap'),
+                selectList = selectWrap.querySelector('.c-selects__lists'),
+                selectItem = selectList.querySelectorAll('.c-selects__item');
+                cur = null;
+
+            new KleineGeste(selects, {
+                touchStart: function(e){
+                    selectList.style..transitionDuration = '0ms';
+                },
+
+                moving: function(e){
+                    var dir = e.direction;
+
+                    
+                }
+            })
+
+            // 获取元素css属性
+            function getCss(el, style){
+                var styleList = getComputedStyle(el, null);
+                return styleList[style];
+            }
+
+            // 获取元素指定的transform属性值
+            function getTransform(el, type){
+                var tx, ty, tz, scalX, scalY, scalZ, xTheta, yTheta, zTheta;
+                var elStyle = getComputedStyle(el, null);
+                var elTransform = elStyle.transform || elStyle.webkitTransform;
+                var mat = elTransform.match(/^matrix3d\((.+)\)$/);
+                var matSplit = '';
+
+                if( mat ){
+                    matSplit = mat[1].split(', ');
+                    switch( type ){
+                        case 'translate':
+                            tx = parseFloat( matSplit[13] );
+                            ty = parseFloat( matSplit[14] );
+                            tz = parseFloat( matSplit[15] );
+                            return [
+                                tx,
+                                ty,
+                                tz
+                            ];
+                        case 'scale':
+                            scalX = parseFloat( matSplit[0] );
+                            scalY = parseFloat( matSplit[5] );
+                            scalZ = parseFloat( matSplit[11] );
+                            return [
+                                scalX,
+                                scalY,
+                                scalZ
+                            ];
+                        case 'rotate':
+                            // rotateY
+                            yTheta = parseFloat( Math.sqrt( ((matSplit[5]-matSplit[0]) / (matSplit[5]-1)) / ( Math.sqrt((matSplit[8]+matSplit[2]) / (matSplit[5]-matSplit[9])) - ( (matSplit[0]-1) / (matSplit[5]-1) ) ) ) );
+                            // rotateX
+                            zTheta = parseFloat( yTheta * (matSplit[8]+matSplit[2]) / (matSplit[9]+matSplit[6]) );
+                            // rotateZ
+                            xTheta = parseFloat( yTheta * (matSplit[1]+matSplit[4]) / (matSplit[8]+matSplit[2]) );
+                            return [
+                                xTheta,
+                                yTheta,
+                                zTheta
+                            ];
+                    }
+                }
+
+                // transform matrix2d
+                mat = elTransform.match(/^matrix\((.+)\)$/);
+                matSplit = mat[1].split(', ');
+                switch( type ){
+                    case 'translate':
+                        tx = parseFloat( matSplit[4] );
+                        ty = parseFloat( matSplit[5] );
+                        return [
+                            tx,
+                            ty
+                        ];
+                    case 'scale':
+                        scalX = parseFloat( matSplit[0] );
+                        scalY = parseFloat( matSplit[3] );
+                        return [
+                            scalX,
+                            scalY
+                        ];
+                    case 'rotate':
+                        zTheta = parseFloat( Math.acos( matSplit[0] ) );
+                        return [
+                            rotTheta
+                        ];
+                }
+            }
+
+            /**
+             * 
+             * 计算缓动距离及时间,匀减速运动
+             * @param {Number} dist 手指滑动距离
+             * @param {Number} duration 手指滑动时间
+             * 
+             * @return {Object} 属性为缓动距离及时间的对象
+             */
+            function uDecelerated(dist, duration){
+                var acceleration = 0.01,                     // 减速时的加速度,自定义
+                    vInitial = Math.abs(dist) / duration,             // 减速的初速度
+                    easingTime = vInitial / acceleration,   // 缓动时间
+                    easingDist = vInitial * easingTime - ( acceleration * Math.pow(easingTime, 2) ) / 2;
+
+                easingDist = (dist > 0) ? easingDist : (-easingDist);
+                return {
+                    easeDist: easingDist,
+                    easeTime: easingTime
+                }
+            }
+
+            /**
+             * 
+             * 松手缓动
+             * @param {DOM Object} el 
+             * @param {Number} dist 
+             * @param {Number} duration 
+             * @param {Number} curTranslate 
+             */
+            function easeEnd(el, dist, duration, curTranslate){
+                var vInit = dist / duration;
+                
+                if( Math.abs(vInit) > 0.5 ){
+                    var easeObj = uDecelerated(dist, duration),
+                        finalDist = curTranslate + easeObj.easeDist;
+                    el.style.transform = 'translate3d(0, ' + finalDist + 'px, 0)';
+                    el.style.transitionDuration = easeObj.easeTime + 'ms';
+                    return finalDist;
+                }
+                return curTranslate;
+            }
+        })()
+    </script>
+</body>
+</html>
