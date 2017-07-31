@@ -105,6 +105,11 @@ class KleineGeste{
 			};
 
 		}else{
+			e.touchCenter = {
+				x: this.t.x,
+				y: this.t.y
+			};
+
 			this.touchStart.dispatch(e);
 			this.startTime = Date.now();
 			
@@ -123,6 +128,10 @@ class KleineGeste{
 			this.prevStartTime = this.startTime;
 			// 开始longtap定时
 			this.longTapTimeout = setTimeout( () => {
+				e.longTapCenter = {
+					x: this.t.x,
+					y: this.t.y
+				};
 				this.longTap.dispatch(e);
 			}, 700);
 		}
