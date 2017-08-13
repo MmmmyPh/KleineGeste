@@ -13,7 +13,7 @@
         .c-selects__wrap:before{top:0; background:linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, transparent 150%);}
         .c-selects__wrap:after{bottom:0; background:linear-gradient(0deg, rgba(255, 255, 255, 1) 0%, transparent 150%);}
         .c-selects__chosen{position:absolute; left:0; right:0; top:50%; transform:translateY(-50%); height:30px; background:linear-gradient(180deg, #dadada 0%, #dadada 50%, transparent 100%), linear-gradient(180deg, #dadada 0%, #dadada 50%, transparent 100%); background-size:100% 1px, 100% 1px; background-repeat:no-repeat; background-position:left bottom, left top;}
-        .c-selects__con{padding-top:60px;}
+        .c-selects__list{padding-top:60px; transform:translate3d(0, 0, 0);}
         .c-selects__item{position:relative; height:30px; line-height:30px;}
         .c-selects__cover{padding:0 30px; text-align:center;}
     </style>
@@ -22,7 +22,7 @@
     <div class="c-selects">
         <div class="c-selects__wrap">
             <div class="c-selects__chosen"></div>
-            <div class="c-selects__con">
+            <div class="c-selects__list">
                 <div class="c-selects__item">
                     <div class="c-selects__cover">1</div>
                 </div>
@@ -81,19 +81,57 @@
 
             var selects = document.querySelector('.c-selects'),
                 selectWrap = selects.querySelector('.c-selects__wrap'),
-                selectList = selectWrap.querySelector('.c-selects__lists'),
+                selectList = selectWrap.querySelector('.c-selects__list'),
                 selectItem = selectList.querySelectorAll('.c-selects__item');
                 cur = null;
 
             new KleineGeste(selects, {
                 touchStart: function(e){
-                    selectList.style..transitionDuration = '0ms';
+                    selectList.style.transitionDuration = '0ms';
                 },
 
                 moving: function(e){
-                    var dir = e.direction;
-
+                    var dir = e.direction,
+                        dis = e.distance;
                     
+                    var moveTranslate,
+                        maxTranslate = 0,
+                        minTranslate = -1 * ( selectItem.length - 1 ) * ( parseFloat( getCss(selectItem[0], 'height') ) );
+                    
+                    if( dir === 'up' || dir === 'down' ){
+                        var translated = getTransform(selectList, 'translate')[1];
+
+                        moveTranslate = translated + dis.y;
+                        
+                        if( moveTranslate >= maxTranslate || moveTranslate <= minTranslate ) {
+                            moveTranslate = translated + dis.y / 2;
+                        }
+
+                        selectList.style.webkitTransform = 'translate3d(0, ' + moveTranslate + 'px, 0)';
+                        selectList.style.transform = 'translate3d(0, ' + moveTranslate + 'px, 0)';
+                    }
+                },
+
+                swipe: function(e){
+                    var translateY = getTransform(selectList, 'translate')[1],
+                        maxTranslate = 0,
+                        minTranslate = -1 * ( selectItem.length - 1 ) * ( parseFloat( getCss(selectItem[0], 'height') ) );
+
+                    if( translateY > maxTranslate ){
+                        selectList.style.webkitTransform = 'translate3d(0, ' + maxTranslate + 'px, 0)';
+                        selectList.style.transform = 'translate3d(0, ' + maxTranslate + 'px, 0)';
+                    }else if( translateY < minTranslate ){
+                        selectList.style.webkitTransform = 'translate3d(0, ' + minTranslate + 'px, 0)';
+                        selectList.style.transform = 'translate3d(0, ' + minTranslate + 'px, 0)';
+                    }else if( -remainder < selectItemHeight / 2 ){
+                        translateY = translateY - remainder;
+                        selectList.style.webkitTransform = 'translate3d(0, ' + translateY + 'px, 0)';
+                        selectList.style.transform = 'translate3d(0, ' + translateY + 'px, 0)';
+                    }else if( -remainder >= selectItemHeight / 2 ){
+                        translateY = translateY - remainder - selectItemHeight;
+                        selectList.style.webkitTransform = 'translate3d(0, ' + translateY + 'px, 0)';
+                        selectList.style.transform = 'translate3d(0, ' + translateY + 'px, 0)';
+                    }
                 }
             })
 
