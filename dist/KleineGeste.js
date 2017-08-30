@@ -207,6 +207,11 @@ var KleineGeste = function () {
 					y: this.prevT.y - this.t.y
 				};
 			} else {
+				e.touchCenter = {
+					x: this.t.x,
+					y: this.t.y
+				};
+
 				this.touchStart.dispatch(e);
 				this.startTime = Date.now();
 
@@ -223,6 +228,10 @@ var KleineGeste = function () {
 				this.prevStartTime = this.startTime;
 				// 开始longtap定时
 				this.longTapTimeout = setTimeout(function () {
+					e.longTapCenter = {
+						x: _this2.t.x,
+						y: _this2.t.y
+					};
 					_this2.longTap.dispatch(e);
 				}, 700);
 			}
@@ -284,6 +293,7 @@ var KleineGeste = function () {
 					x: this.moveT.x - this.t.x,
 					y: this.moveT.y - this.t.y
 				};
+				e.duration = this.endTime - this.startTime;
 				this.swipe.dispatch(e);
 			} else {
 				if (tools.getMinusAbs(this.endTime, this.startTime) < 300) {

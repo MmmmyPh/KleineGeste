@@ -190,6 +190,7 @@ class KleineGeste{
 				x: this.moveT.x - this.t.x,
 				y: this.moveT.y - this.t.y
 			};
+			e.duration = this.endTime - this.startTime;
 			this.swipe.dispatch(e);
 		}else{
 			if( tools.getMinusAbs(this.endTime, this.startTime ) < 300 ){
