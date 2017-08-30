@@ -34,6 +34,8 @@
 
     - `distance`：已滑动过的距离
 
+    - 'duration': `swipe`使用的时间，在需要做缓动操作时有用
+
 - `scale`
 
     - `scales`：缩放倍数
