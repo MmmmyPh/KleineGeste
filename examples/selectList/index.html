@@ -88,6 +88,7 @@
             new KleineGeste(selects, {
                 touchStart: function(e){
                     selectList.style.transitionDuration = '0ms';
+                    this.translated = getTransform(selectList, 'translate')[1];
                 },
 
                 moving: function(e){
@@ -99,12 +100,10 @@
                         minTranslate = -1 * ( selectItem.length - 1 ) * ( parseFloat( getCss(selectItem[0], 'height') ) );
                     
                     if( dir === 'up' || dir === 'down' ){
-                        var translated = getTransform(selectList, 'translate')[1];
-
-                        moveTranslate = translated + dis.y;
+                        moveTranslate = this.translated + dis.y;
                         
                         if( moveTranslate >= maxTranslate || moveTranslate <= minTranslate ) {
-                            moveTranslate = translated + dis.y / 2;
+                            moveTranslate = this.translated + dis.y / 2;
                         }
 
                         selectList.style.webkitTransform = 'translate3d(0, ' + moveTranslate + 'px, 0)';
@@ -113,24 +112,32 @@
                 },
 
                 swipe: function(e){
-                    var translateY = getTransform(selectList, 'translate')[1],
+                    var dis = e.distance.y,
+                        duration = e.duration,
+                        curTransY = getTransform(selectList, 'translate')[1],
+                        easeDis = 0,
+                        remainder = 0,
                         maxTranslate = 0,
-                        minTranslate = -1 * ( selectItem.length - 1 ) * ( parseFloat( getCss(selectItem[0], 'height') ) );
+                        minTranslate = -1 * ( selectItem.length - 1 ) * ( parseFloat( getCss(selectItem[0], 'height') ) ),
+                        selectItemHeight = parseFloat(getCss(selectItem[0], 'height'));
 
-                    if( translateY > maxTranslate ){
+                    easeDis = easeEnd(selectList, dis, duration, curTransY);
+                    remainder = easeDis % selectItemHeight;
+
+                    if( easeDis > maxTranslate ){
                         selectList.style.webkitTransform = 'translate3d(0, ' + maxTranslate + 'px, 0)';
                         selectList.style.transform = 'translate3d(0, ' + maxTranslate + 'px, 0)';
-                    }else if( translateY < minTranslate ){
+                    }else if( easeDis < minTranslate ){
                         selectList.style.webkitTransform = 'translate3d(0, ' + minTranslate + 'px, 0)';
                         selectList.style.transform = 'translate3d(0, ' + minTranslate + 'px, 0)';
                     }else if( -remainder < selectItemHeight / 2 ){
-                        translateY = translateY - remainder;
-                        selectList.style.webkitTransform = 'translate3d(0, ' + translateY + 'px, 0)';
-                        selectList.style.transform = 'translate3d(0, ' + translateY + 'px, 0)';
+                        easeDis = easeDis - remainder;
+                        selectList.style.webkitTransform = 'translate3d(0, ' + easeDis + 'px, 0)';
+                        selectList.style.transform = 'translate3d(0, ' + easeDis + 'px, 0)';
                     }else if( -remainder >= selectItemHeight / 2 ){
-                        translateY = translateY - remainder - selectItemHeight;
-                        selectList.style.webkitTransform = 'translate3d(0, ' + translateY + 'px, 0)';
-                        selectList.style.transform = 'translate3d(0, ' + translateY + 'px, 0)';
+                        easeDis = easeDis - remainder - selectItemHeight;
+                        selectList.style.webkitTransform = 'translate3d(0, ' + easeDis + 'px, 0)';
+                        selectList.style.transform = 'translate3d(0, ' + easeDis + 'px, 0)';
                     }
                 }
             })
